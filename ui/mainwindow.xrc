@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<resource version="2.5.3.0" xmlns="http://www.wxwidgets.org/wxxrc">
+  <object class="wxFrame" name="mainwindow">
+    <title>TSC Settingseditor</title>
+    <size>300,300</size>
+  </object>
+</resource>
+<!--
+Local variables:
+mode: xml
+End:
+-->

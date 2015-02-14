@@ -1,7 +1,5 @@
 #include <iostream>
+#include "app.hpp"
 
-int main(int argc, char* argv[])
-{
-  std::cout << "Hello world." << std::endl;
-  return 0;
-}
+// So wxWidgets wants me to not have a main() function. Go figure.
+IMPLEMENT_APP(ScripteditorApp)
