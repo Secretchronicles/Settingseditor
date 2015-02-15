@@ -5,7 +5,7 @@
 #include "app.hpp"
 
 /***************************************
- * OnInit()
+ * OnInit() and OnExit()
  ***************************************/
 
 bool SettingseditorApp::OnInit()
@@ -16,11 +16,18 @@ bool SettingseditorApp::OnInit()
   wxXmlResource::Get()->Load("../ui/mainwindow.xrc");
 
   mp_mainwindow = wxXmlResource::Get()->LoadFrame(NULL, "mainwindow");
+  mp_cache_info = new wxConfig("TSC-Scripteditor");
 
   setup_event_handlers();
 
   mp_mainwindow->Show(true);
   return true;
+}
+
+int SettingseditorApp::OnExit()
+{
+  delete mp_cache_info;
+  return 0;
 }
 
 /***************************************
