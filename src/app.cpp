@@ -2,6 +2,7 @@
 #include <locale>
 #include <unistd.h>
 #include <wx/xrc/xmlres.h>
+#include "cache.hpp"
 #include "app.hpp"
 
 /***************************************
@@ -16,10 +17,8 @@ bool SettingseditorApp::OnInit()
   wxXmlResource::Get()->Load("../ui/mainwindow.xrc");
 
   mp_mainwindow = wxXmlResource::Get()->LoadFrame(NULL, "mainwindow");
-  mp_cache_info = new wxConfig("TSC-Scripteditor");
-  m_last_path = Pathie::Path::pwd();
+  mp_cache_info = new CacheInfo(Pathie::Path::cache_dir() / "tsc-scripteditor" / "data.ini");
 
-  load_cache();
   setup_event_handlers();
 
   mp_mainwindow->Show(true);
@@ -28,7 +27,6 @@ bool SettingseditorApp::OnInit()
 
 int SettingseditorApp::OnExit()
 {
-  mp_cache_info->Write("last_path", utf8_to_wxstr(m_last_path.str()));
   delete mp_cache_info;
   return 0;
 }
@@ -36,13 +34,6 @@ int SettingseditorApp::OnExit()
 /***************************************
  * Helper functions
  ***************************************/
-
-void SettingseditorApp::load_cache()
-{
-  wxString lastpath;
-  if (mp_cache_info->Read("last_path", &lastpath))
-    m_last_path = Pathie::Path(wxstr_to_utf8(lastpath));
-}
 
 void SettingseditorApp::setup_event_handlers()
 {
@@ -80,10 +71,9 @@ void SettingseditorApp::on_menu_file_quit(wxCommandEvent& evt)
 
 void SettingseditorApp::on_add_frame_button_clicked(wxCommandEvent& evt)
 {
-  std::cout << "Last path: '" << m_last_path.str() << std::endl;
   wxFileDialog fd(mp_mainwindow,
 		  "Select file",
-		  utf8_to_wxstr(m_last_path.str()),
+		  utf8_to_wxstr(mp_cache_info->get_last_dir().str()),
 		  "",
 		  "PNG files (*.png)|*.png|Any file (*.*)|*.*");
 
@@ -93,7 +83,7 @@ void SettingseditorApp::on_add_frame_button_clicked(wxCommandEvent& evt)
   Pathie::Path path(wxstr_to_utf8(fd.GetPath()));
   add_frame(path);
 
-  m_last_path = path.dirname();
+  mp_cache_info->set_last_dir(path.dirname());
 }
 
 void SettingseditorApp::on_del_frame_button_clicked(wxCommandEvent& evt)

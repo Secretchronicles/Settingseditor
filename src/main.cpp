@@ -1,4 +1,5 @@
 #include <iostream>
+#include "cache.hpp"
 #include "app.hpp"
 
 // So wxWidgets wants me to not have a main() function. Go figure.
