@@ -53,12 +53,16 @@ include_directories(${Pathie_INCLUDE_DIR})
 file(GLOB_RECURSE editor_sources
   "src/*.cpp"
   "src/*.hpp")
+set(inih_sources "inih/ini.c" "inih/ini.h" "inih/cpp/INIReader.cpp" "inih/cpp/INIReader.h")
+
+include_directories(${CMAKE_SOURCE_DIR}/inih ${CMAKE_SOURCE_DIR}/inih/cpp)
 
 ########################################
 # Targets
 
+add_library(inih STATIC ${inih_sources})
 add_executable(tsc-scripteditor ${editor_sources})
-target_link_libraries(tsc-scripteditor ${wxWidgets_LIBRARIES} ${Pathie_LIBRARIES})
+target_link_libraries(tsc-scripteditor ${wxWidgets_LIBRARIES} ${Pathie_LIBRARIES} inih)
 
 ########################################
 # Installation information

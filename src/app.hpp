@@ -11,6 +11,7 @@ class SettingseditorApp: public wxApp
   virtual int OnExit();
 private:
   void setup_event_handlers();
+  void load_cache();
 
   void add_frame(Pathie::Path path);
   wxString utf8_to_wxstr(const std::string& utf8);
@@ -23,5 +24,6 @@ private:
   wxConfig* mp_cache_info;
   wxFrame* mp_mainwindow;
   std::vector<Pathie::Path> m_frames;
+  Pathie::Path m_last_path;
 };
 #endif

@@ -17,7 +17,9 @@ bool SettingseditorApp::OnInit()
 
   mp_mainwindow = wxXmlResource::Get()->LoadFrame(NULL, "mainwindow");
   mp_cache_info = new wxConfig("TSC-Scripteditor");
+  m_last_path = Pathie::Path::pwd();
 
+  load_cache();
   setup_event_handlers();
 
   mp_mainwindow->Show(true);
@@ -26,6 +28,7 @@ bool SettingseditorApp::OnInit()
 
 int SettingseditorApp::OnExit()
 {
+  mp_cache_info->Write("last_path", utf8_to_wxstr(m_last_path.str()));
   delete mp_cache_info;
   return 0;
 }
@@ -33,6 +36,13 @@ int SettingseditorApp::OnExit()
 /***************************************
  * Helper functions
  ***************************************/
+
+void SettingseditorApp::load_cache()
+{
+  wxString lastpath;
+  if (mp_cache_info->Read("last_path", &lastpath))
+    m_last_path = Pathie::Path(wxstr_to_utf8(lastpath));
+}
 
 void SettingseditorApp::setup_event_handlers()
 {
@@ -70,16 +80,20 @@ void SettingseditorApp::on_menu_file_quit(wxCommandEvent& evt)
 
 void SettingseditorApp::on_add_frame_button_clicked(wxCommandEvent& evt)
 {
+  std::cout << "Last path: '" << m_last_path.str() << std::endl;
   wxFileDialog fd(mp_mainwindow,
 		  "Select file",
-		  "",
+		  utf8_to_wxstr(m_last_path.str()),
 		  "",
 		  "PNG files (*.png)|*.png|Any file (*.*)|*.*");
 
   if (fd.ShowModal() == wxID_CANCEL)
     return;
 
-  add_frame(Pathie::Path(wxstr_to_utf8(fd.GetPath())));
+  Pathie::Path path(wxstr_to_utf8(fd.GetPath()));
+  add_frame(path);
+
+  m_last_path = path.dirname();
 }
 
 void SettingseditorApp::on_del_frame_button_clicked(wxCommandEvent& evt)
