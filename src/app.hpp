@@ -6,6 +6,10 @@ class ScripteditorApp: public wxApp
 {
   virtual bool OnInit();
 private:
+  void setup_menu_bar();
+
+  void On_Menu_File_Quit(wxCommandEvent& evt);
+
   wxFrame* mp_mainwindow;
 };
 #endif
