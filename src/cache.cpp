@@ -7,6 +7,7 @@ static int ini_parse_handler(void* ptr, const char* section, const char* name, c
 CacheInfo::CacheInfo(Pathie::Path cachefile)
 {
   m_cachefile = cachefile;
+  m_last_dir = Pathie::Path::pwd();
 
   // Create the cache directory if it doesn’t exist yet
   m_cachefile.dirname().mktree();
