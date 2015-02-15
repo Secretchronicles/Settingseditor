@@ -24,7 +24,7 @@ endif()
 ########################################
 # Extra flags
 
-if (CMAKE_CXX_COMPILER_ID MATCHES "Gnu|Clang")
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11")
 endif()
 
@@ -46,8 +46,6 @@ find_package(Pathie REQUIRED)
 include(${wxWidgets_USE_FILE})
 include_directories(${wxWidgets_INCLUDE_DIRS})
 include_directories(${Pathie_INCLUDE_DIR})
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${wxWidgets_CXX_FLAGS}")
 
 ########################################
 # Source files
