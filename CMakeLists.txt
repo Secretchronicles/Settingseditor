@@ -40,7 +40,7 @@ endif()
 # Dependencies
 
 #find_package(PkgConfig REQUIRED)
-find_package(wxWidgets 3.0.0 REQUIRED xrc base core)
+find_package(wxWidgets 3.0.0 REQUIRED xrc core base)
 find_package(Pathie REQUIRED)
 
 include(${wxWidgets_USE_FILE})
