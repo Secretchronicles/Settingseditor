@@ -1,8 +1,10 @@
 #include <stdexcept>
 #include <locale>
 #include <unistd.h>
+#include <wx/statline.h>
 #include <wx/xrc/xmlres.h>
 #include "cache.hpp"
+#include "graphics_editor.hpp"
 #include "app.hpp"
 
 /***************************************
@@ -19,6 +21,7 @@ bool SettingseditorApp::OnInit()
   mp_mainwindow = wxXmlResource::Get()->LoadFrame(NULL, "mainwindow");
   mp_cache_info = new CacheInfo(Pathie::Path::cache_dir() / "tsc-scripteditor" / "data.ini");
 
+  setup_graphicseditor();
   setup_event_handlers();
 
   mp_mainwindow->Show(true);
@@ -27,6 +30,7 @@ bool SettingseditorApp::OnInit()
 
 int SettingseditorApp::OnExit()
 {
+  delete mp_graphicseditor;
   delete mp_cache_info;
   return 0;
 }
@@ -34,6 +38,18 @@ int SettingseditorApp::OnExit()
 /***************************************
  * Helper functions
  ***************************************/
+
+void SettingseditorApp::setup_graphicseditor()
+{
+  // wxWidgets doesn’t allow us to get a sizer out of the XRC directly, so we have to
+  // jump through some hoops to get it. Retrieve a child widget and ask it for its
+  // sizer.
+  wxStaticLine* p_line = XRCCTRL(*mp_mainwindow, "image_separator_line", wxStaticLine);
+  wxBoxSizer* p_sizer = static_cast<wxBoxSizer*>(p_line->GetContainingSizer());
+
+  mp_graphicseditor = new GraphicsEditor(XRCCTRL(*mp_mainwindow, "image_page", wxPanel), wxID_ANY);
+  p_sizer->Prepend(mp_graphicseditor, 1, wxEXPAND);
+}
 
 void SettingseditorApp::setup_event_handlers()
 {

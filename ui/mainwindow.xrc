@@ -33,7 +33,7 @@
 		</object>
 		<object class="wxSplitterWindow" name="m_splitter1">
 			<style>wxSP_3D|wxSP_3DBORDER|wxSP_3DSASH|wxSP_BORDER</style>
-			<sashpos>200</sashpos>
+			<sashpos>250</sashpos>
 			<gravity>0</gravity>
 			<minsize>0</minsize>
 			<orientation>vertical</orientation>
@@ -89,16 +89,16 @@
 							<object class="notebookpage">
 								<label>Image</label>
 								<selected>0</selected>
-								<object class="wxPanel" name="m_panel3">
+								<object class="wxPanel" name="image_page">
 									<style>wxTAB_TRAVERSAL</style>
 									<object class="wxBoxSizer">
 										<orient>wxVERTICAL</orient>
 										<object class="sizeritem">
-											<option>1</option>
+											<option>0</option>
 											<flag>wxEXPAND | wxALL</flag>
 											<border>5</border>
-											<object class="wxPanel" name="drawing_panel">
-												<style>wxTAB_TRAVERSAL</style>
+											<object class="wxStaticLine" name="image_separator_line">
+												<style>wxLI_HORIZONTAL</style>
 											</object>
 										</object>
 										<object class="sizeritem">
@@ -151,7 +151,7 @@
 							<object class="notebookpage">
 								<label>Settings</label>
 								<selected>0</selected>
-								<object class="wxPanel" name="m_panel4">
+								<object class="wxPanel" name="settings_page">
 									<style>wxTAB_TRAVERSAL</style>
 									<object class="wxBoxSizer">
 										<orient>wxVERTICAL</orient>

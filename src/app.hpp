@@ -10,6 +10,7 @@ class SettingseditorApp: public wxApp
   virtual bool OnInit();
   virtual int OnExit();
 private:
+  void setup_graphicseditor();
   void setup_event_handlers();
 
   void add_frame(Pathie::Path path);
@@ -22,6 +23,7 @@ private:
 
   CacheInfo* mp_cache_info;
   wxFrame* mp_mainwindow;
+  GraphicsEditor* mp_graphicseditor;
   std::vector<Pathie::Path> m_frames;
 };
 #endif
