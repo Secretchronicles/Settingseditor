@@ -30,7 +30,7 @@ bool SettingseditorApp::OnInit()
 
 int SettingseditorApp::OnExit()
 {
-  delete mp_graphicseditor;
+  //delete mp_graphicseditor; // Memory managed by wx? Segfaults if deleted here with a double-free message by glibc.
   delete mp_cache_info;
   return 0;
 }
