@@ -24,6 +24,6 @@ private:
   CacheInfo* mp_cache_info;
   wxFrame* mp_mainwindow;
   GraphicsEditor* mp_graphicseditor;
-  std::vector<Pathie::Path> m_frames;
+  std::vector<Frame> m_frames;
 };
 #endif

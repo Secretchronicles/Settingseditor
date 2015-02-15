@@ -5,6 +5,7 @@
 #include <wx/xrc/xmlres.h>
 #include "cache.hpp"
 #include "graphics_editor.hpp"
+#include "frame.hpp"
 #include "app.hpp"
 
 /***************************************
@@ -72,7 +73,7 @@ std::string SettingseditorApp::wxstr_to_utf8(const wxString& wxstr)
 
 void SettingseditorApp::add_frame(Pathie::Path path)
 {
-  m_frames.push_back(path);
+  m_frames.push_back(Frame(path));
   XRCCTRL(*mp_mainwindow, "frame_listbox", wxListBox)->Append(utf8_to_wxstr(path.basename().str()));
 }
 
