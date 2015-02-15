@@ -2,13 +2,13 @@
 #define TSC_SCRIPTEDITOR_APP_HPP
 #include <wx/wx.h>
 
-class ScripteditorApp: public wxApp
+class SettingseditorApp: public wxApp
 {
   virtual bool OnInit();
 private:
-  void setup_menu_bar();
+  void setup_event_handlers();
 
-  void On_Menu_File_Quit(wxCommandEvent& evt);
+  void on_menu_file_quit(wxCommandEvent& evt);
 
   wxFrame* mp_mainwindow;
 };

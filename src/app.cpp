@@ -3,25 +3,25 @@
 #include <wx/xrc/xmlres.h>
 #include "app.hpp"
 
-bool ScripteditorApp::OnInit()
+bool SettingseditorApp::OnInit()
 {
   wxXmlResource::Get()->InitAllHandlers();
   wxXmlResource::Get()->Load("../ui/mainwindow.xrc");
 
   mp_mainwindow = wxXmlResource::Get()->LoadFrame(NULL, "mainwindow");
 
-  setup_menu_bar();
+  setup_event_handlers();
 
   mp_mainwindow->Show(true);
   return true;
 }
 
-void ScripteditorApp::setup_menu_bar()
+void SettingseditorApp::setup_event_handlers()
 {
-  mp_mainwindow->Bind(wxEVT_COMMAND_MENU_SELECTED, &ScripteditorApp::On_Menu_File_Quit, this, wxID_EXIT);
+  mp_mainwindow->Bind(wxEVT_COMMAND_MENU_SELECTED, &SettingseditorApp::on_menu_file_quit, this, wxID_EXIT);
 }
 
-void ScripteditorApp::On_Menu_File_Quit(wxCommandEvent& evt)
+void SettingseditorApp::on_menu_file_quit(wxCommandEvent& evt)
 {
   mp_mainwindow->Close();
 }
