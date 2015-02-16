@@ -37,6 +37,10 @@ private:
   void on_resize(wxSizeEvent& evt);
 
   Frame* mp_frame;
+  int m_scaled_x;
+  int m_scaled_y;
+  int m_scaled_w;
+  int m_scaled_h;
 };
 
 #endif

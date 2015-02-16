@@ -69,8 +69,19 @@ void GraphicsEditor::on_paint(wxPaintEvent& evt)
     int height = mp_frame->get_settings().get_height();
     wxImage scaled_image = mp_frame->get_image().Scale(width, height, wxIMAGE_QUALITY_HIGH);
     wxGraphicsBitmap bitmap = p_gc->CreateBitmapFromImage(scaled_image);
+    // Center the image on the available drawing area
+    m_scaled_w = scaled_image.GetWidth();
+    m_scaled_h = scaled_image.GetHeight();
+    m_scaled_x = (dimensions.GetWidth() - m_scaled_w) / 2;
+    m_scaled_y = (dimensions.GetHeight() - m_scaled_h) / 2;
 
-    p_gc->DrawBitmap(bitmap, 0, 0, width, height);
+    p_gc->DrawBitmap(bitmap, m_scaled_x, m_scaled_y, width, height);
+
+    p_gc->SetPen(*wxBLUE_PEN);
+    p_gc->StrokeLine(-9999, m_scaled_y, 9999, m_scaled_y);
+    p_gc->StrokeLine(m_scaled_x + width, -9999, m_scaled_x + width, 9999);
+    p_gc->StrokeLine(9999, m_scaled_y + height, -9999, m_scaled_y + height);
+    p_gc->StrokeLine(m_scaled_x, 9999, m_scaled_x, -9999);
   }
 
   delete p_gc;
