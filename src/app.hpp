@@ -20,10 +20,12 @@ private:
   void on_menu_file_quit(wxCommandEvent& evt);
   void on_add_frame_button_clicked(wxCommandEvent& evt);
   void on_del_frame_button_clicked(wxCommandEvent& evt);
+  void on_frame_list_item_selected(wxCommandEvent& evt);
 
   CacheInfo* mp_cache_info;
   wxFrame* mp_mainwindow;
   GraphicsEditor* mp_graphicseditor;
-  std::vector<Frame> m_frames;
+  std::vector<Frame*> m_frames;
+  int m_last_selected_frame;
 };
 #endif

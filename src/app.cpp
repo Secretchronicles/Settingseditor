@@ -2,6 +2,7 @@
 #include <locale>
 #include <unistd.h>
 #include <wx/statline.h>
+#include <wx/spinctrl.h>
 #include <wx/xrc/xmlres.h>
 #include "cache.hpp"
 #include "graphics_editor.hpp"
@@ -21,6 +22,7 @@ bool SettingseditorApp::OnInit()
 
   mp_mainwindow = wxXmlResource::Get()->LoadFrame(NULL, "mainwindow");
   mp_cache_info = new CacheInfo(Pathie::Path::cache_dir() / "tsc-scripteditor" / "data.ini");
+  m_last_selected_frame = -1;
 
   setup_graphicseditor();
   setup_event_handlers();
@@ -32,6 +34,12 @@ bool SettingseditorApp::OnInit()
 int SettingseditorApp::OnExit()
 {
   //delete mp_graphicseditor; // Memory managed by wx? Segfaults if deleted here with a double-free message by glibc.
+
+  // Free all the frames
+  std::vector<Frame*>::iterator iter;
+  for(iter = m_frames.begin(); iter != m_frames.end(); iter++)
+    delete (*iter);
+
   delete mp_cache_info;
   return 0;
 }
@@ -59,6 +67,9 @@ void SettingseditorApp::setup_event_handlers()
 
   XRCCTRL(*mp_mainwindow, "add_frame_button", wxButton)->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &SettingseditorApp::on_add_frame_button_clicked, this, XRCID("add_frame_button"));
   XRCCTRL(*mp_mainwindow, "del_frame_button", wxButton)->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &SettingseditorApp::on_del_frame_button_clicked, this, XRCID("del_frame_button"));
+
+  // List
+  XRCCTRL(*mp_mainwindow, "frame_listbox", wxListBox)->Bind(wxEVT_LISTBOX, &SettingseditorApp::on_frame_list_item_selected, this, wxID_ANY);
 }
 
 wxString SettingseditorApp::utf8_to_wxstr(const std::string& utf8)
@@ -73,7 +84,7 @@ std::string SettingseditorApp::wxstr_to_utf8(const wxString& wxstr)
 
 void SettingseditorApp::add_frame(Pathie::Path path)
 {
-  m_frames.push_back(Frame(path));
+  m_frames.push_back(new Frame(path));
   XRCCTRL(*mp_mainwindow, "frame_listbox", wxListBox)->Append(utf8_to_wxstr(path.basename().str()));
 }
 
@@ -106,4 +117,38 @@ void SettingseditorApp::on_add_frame_button_clicked(wxCommandEvent& evt)
 void SettingseditorApp::on_del_frame_button_clicked(wxCommandEvent& evt)
 {
   std::cout << "TODO" << std::endl;
+}
+
+void SettingseditorApp::on_frame_list_item_selected(wxCommandEvent& evt)
+{
+  wxSpinCtrl* p_width_spin   = XRCCTRL(*mp_mainwindow, "width_spin", wxSpinCtrl);
+  wxSpinCtrl* p_height_spin  = XRCCTRL(*mp_mainwindow, "height_spin", wxSpinCtrl);
+  wxTextCtrl* p_name_text    = XRCCTRL(*mp_mainwindow, "name_text", wxTextCtrl);
+  wxTextCtrl* p_author_text  = XRCCTRL(*mp_mainwindow, "author_text", wxTextCtrl);
+  wxTextCtrl* p_license_text = XRCCTRL(*mp_mainwindow, "license_text", wxTextCtrl);
+  wxTextCtrl* p_other_text   = XRCCTRL(*mp_mainwindow, "other_text", wxTextCtrl);
+
+  // Save the values of the last frame, if any
+  if (m_last_selected_frame >= 0) {
+    Frame* p_lastframe = m_frames[m_last_selected_frame];
+
+    p_lastframe->get_settings().set_width(p_width_spin->GetValue());
+    p_lastframe->get_settings().set_height(p_height_spin->GetValue());
+    p_lastframe->get_settings().set_name(wxstr_to_utf8(p_name_text->GetValue()));
+    p_lastframe->get_settings().set_author(wxstr_to_utf8(p_author_text->GetValue()));
+    p_lastframe->get_settings().set_license(wxstr_to_utf8(p_license_text->GetValue()));
+    p_lastframe->get_settings().set_other(wxstr_to_utf8(p_other_text->GetValue()));
+  }
+
+  // Read values of the new frame
+  Frame* p_frame = m_frames[evt.GetInt()];
+  p_width_spin   ->SetValue(p_frame->get_settings().get_width());
+  p_height_spin  ->SetValue(p_frame->get_settings().get_height());
+  p_name_text    ->SetValue(utf8_to_wxstr(p_frame->get_settings().get_name()));
+  p_author_text  ->SetValue(utf8_to_wxstr(p_frame->get_settings().get_author()));
+  p_license_text ->SetValue(utf8_to_wxstr(p_frame->get_settings().get_license()));
+  p_other_text   ->SetValue(utf8_to_wxstr(p_frame->get_settings().get_other()));
+
+  // Set last frame for saving next time
+  m_last_selected_frame = evt.GetInt();
 }

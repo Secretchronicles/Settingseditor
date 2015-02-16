@@ -28,7 +28,7 @@ public:
     inline void set_col_y(int val){m_col_y = val;}
     inline void set_col_width(int val){m_col_w = val;}
     inline void set_col_height(int val){m_col_h = val;}
-    inline void get_name(std::string val){m_name = val;}
+    inline void set_name(std::string val){m_name = val;}
     inline void set_author(std::string val){m_author = val;}
     inline void set_license(std::string val){m_license = val;}
     inline void set_other(std::string val){m_other = val;}
@@ -50,6 +50,8 @@ public:
   };
 
   Frame(Pathie::Path png_path);
+
+  inline TscSettings& get_settings(){return m_settings;}
 private:
   Pathie::Path m_png_path;
   TscSettings m_settings;
