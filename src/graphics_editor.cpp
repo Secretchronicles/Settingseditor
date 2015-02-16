@@ -36,7 +36,7 @@ GraphicsEditor::GraphicsEditor(wxWindow* p_parent,
   mp_border_brush = new wxBrush(wxColour(200, 200, 200, wxALPHA_OPAQUE));
 
   Bind(wxEVT_PAINT, &GraphicsEditor::on_paint, this, winid);
-  //Bind(wxEVT_SIZE, &GraphicsEditor::on_resize, this, winid);
+  Bind(wxEVT_SIZE, &GraphicsEditor::on_resize, this, winid);
 }
 
 GraphicsEditor::~GraphicsEditor()
@@ -127,5 +127,5 @@ void GraphicsEditor::on_paint(wxPaintEvent& evt)
 
 void GraphicsEditor::on_resize(wxSizeEvent& evt)
 {
-
+  Refresh();
 }
