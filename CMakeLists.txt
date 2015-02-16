@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 enable_language(CXX)
-project(Pathie)
+project(TSC_Settingseditor)
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
@@ -17,8 +17,8 @@ execute_process(COMMAND git rev-parse --short HEAD
   OUTPUT_STRIP_TRAILING_WHITESPACE)
 
 # If git was not available, unset empty variable
-if (NOT(PATHIE_VERSION_GIT))
-  unset(PATHIE_VERSION_GIT)
+if (NOT(TSC_SETTINGSEDITOR_VERSION_GIT))
+  unset(TSC_SETTINGSEDITOR_VERSION_GIT)
 endif()
 
 ########################################
@@ -37,15 +37,25 @@ if (WIN32)
 endif()
 
 ########################################
+# External project builds
+
+# inih
+set(inih_sources "inih/ini.c" "inih/ini.h" "inih/cpp/INIReader.cpp" "inih/cpp/INIReader.h")
+include_directories(${CMAKE_SOURCE_DIR}/inih ${CMAKE_SOURCE_DIR}/inih/cpp)
+add_library(inih STATIC ${inih_sources})
+
+# Pathie
+add_subdirectory(${CMAKE_SOURCE_DIR}/pathie
+  EXCLUDE_FROM_ALL)
+
+########################################
 # Dependencies
 
 #find_package(PkgConfig REQUIRED)
 find_package(wxWidgets 3.0.0 REQUIRED xrc core base)
-find_package(Pathie REQUIRED)
 
 include(${wxWidgets_USE_FILE})
 include_directories(${wxWidgets_INCLUDE_DIRS})
-include_directories(${Pathie_INCLUDE_DIR})
 
 ########################################
 # Source files
@@ -53,16 +63,12 @@ include_directories(${Pathie_INCLUDE_DIR})
 file(GLOB_RECURSE editor_sources
   "src/*.cpp"
   "src/*.hpp")
-set(inih_sources "inih/ini.c" "inih/ini.h" "inih/cpp/INIReader.cpp" "inih/cpp/INIReader.h")
-
-include_directories(${CMAKE_SOURCE_DIR}/inih ${CMAKE_SOURCE_DIR}/inih/cpp)
 
 ########################################
 # Targets
 
-add_library(inih STATIC ${inih_sources})
 add_executable(tsc-settingseditor ${editor_sources})
-target_link_libraries(tsc-settingseditor ${wxWidgets_LIBRARIES} ${Pathie_LIBRARIES} inih)
+target_link_libraries(tsc-settingseditor ${wxWidgets_LIBRARIES} pathie inih)
 
 ########################################
 # Installation information
