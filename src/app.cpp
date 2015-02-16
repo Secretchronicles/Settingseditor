@@ -89,6 +89,12 @@ void SettingseditorApp::setup_event_handlers()
 
   // List
   XRCCTRL(*mp_mainwindow, "frame_listbox", wxListBox)->Bind(wxEVT_LISTBOX, &SettingseditorApp::on_frame_list_item_selected, this, wxID_ANY);
+
+  // Collision rectangle spin buttons
+  XRCCTRL(*mp_mainwindow, "col_x_spin", wxSpinCtrl)->Bind(wxEVT_SPINCTRL, &SettingseditorApp::on_colrect_spin_changed, this, wxID_ANY);
+  XRCCTRL(*mp_mainwindow, "col_y_spin", wxSpinCtrl)->Bind(wxEVT_SPINCTRL, &SettingseditorApp::on_colrect_spin_changed, this, wxID_ANY);
+  XRCCTRL(*mp_mainwindow, "col_w_spin", wxSpinCtrl)->Bind(wxEVT_SPINCTRL, &SettingseditorApp::on_colrect_spin_changed, this, wxID_ANY);
+  XRCCTRL(*mp_mainwindow, "col_h_spin", wxSpinCtrl)->Bind(wxEVT_SPINCTRL, &SettingseditorApp::on_colrect_spin_changed, this, wxID_ANY);
 }
 
 void SettingseditorApp::add_frame(Pathie::Path path)
@@ -163,4 +169,20 @@ void SettingseditorApp::on_frame_list_item_selected(wxCommandEvent& evt)
 
   // Set last frame for saving next time
   m_last_selected_frame = evt.GetInt();
+}
+
+void SettingseditorApp::on_colrect_spin_changed(wxSpinEvent& evt)
+{
+  int x = XRCCTRL(*mp_mainwindow, "col_x_spin", wxSpinCtrl)->GetValue();
+  int y = XRCCTRL(*mp_mainwindow, "col_y_spin", wxSpinCtrl)->GetValue();
+  int w = XRCCTRL(*mp_mainwindow, "col_w_spin", wxSpinCtrl)->GetValue();
+  int h = XRCCTRL(*mp_mainwindow, "col_h_spin", wxSpinCtrl)->GetValue();
+
+  Frame::TscSettings& settings = m_frames[XRCCTRL(*mp_mainwindow, "frame_listbox", wxListBox)->GetSelection()]->get_settings();
+  settings.set_col_x(x);
+  settings.set_col_y(y);
+  settings.set_col_width(w);
+  settings.set_col_height(h);
+
+  mp_graphicseditor->Refresh();
 }

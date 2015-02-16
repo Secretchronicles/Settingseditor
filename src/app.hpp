@@ -19,7 +19,7 @@
 #define TSC_SCRIPTEDITOR_APP_HPP
 #include <vector>
 #include <wx/wx.h>
-#include <wx/config.h>
+#include <wx/spinctrl.h>
 #include <pathie.hpp>
 
 class SettingseditorApp: public wxApp
@@ -40,6 +40,7 @@ private:
   void on_add_frame_button_clicked(wxCommandEvent& evt);
   void on_del_frame_button_clicked(wxCommandEvent& evt);
   void on_frame_list_item_selected(wxCommandEvent& evt);
+  void on_colrect_spin_changed(wxSpinEvent& evt);
 
   CacheInfo* mp_cache_info;
   wxFrame* mp_mainwindow;
