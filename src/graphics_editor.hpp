@@ -29,9 +29,14 @@ public:
 		 long style = wxNO_BORDER,
 		 const wxString& name = "GraphicsEditor");
 
+  inline void set_frame(Frame* p_frame){mp_frame = p_frame; Refresh();}
+  inline Frame* get_frame(){return mp_frame;}
+
 private:
   void on_paint(wxPaintEvent& evt);
   void on_resize(wxSizeEvent& evt);
+
+  Frame* mp_frame;
 };
 
 #endif

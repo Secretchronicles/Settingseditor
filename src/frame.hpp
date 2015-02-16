@@ -18,6 +18,8 @@
 #ifndef TSC_SETTINGSEDITOR_FRAME_HPP
 #define TSC_SETTINGSEDITOR_FRAME_HPP
 #include <pathie.hpp>
+#include <wx/wx.h>
+#include <wx/image.h>
 
 class Frame
 {
@@ -67,11 +69,14 @@ public:
   };
 
   Frame(Pathie::Path png_path);
+  ~Frame();
 
   inline TscSettings& get_settings(){return m_settings;}
+  inline wxImage& get_image(){return *mp_wximage;}
 private:
   Pathie::Path m_png_path;
   TscSettings m_settings;
+  wxImage* mp_wximage;
 };
 
 #endif

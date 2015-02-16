@@ -44,7 +44,7 @@
             <property name="minimum_size"></property>
             <property name="name">mainwindow</property>
             <property name="pos"></property>
-            <property name="size">934,602</property>
+            <property name="size">931,602</property>
             <property name="style">wxDEFAULT_FRAME_STYLE</property>
             <property name="subclass"></property>
             <property name="title">TSC Settingseditor</property>

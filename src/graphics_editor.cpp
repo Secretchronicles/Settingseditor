@@ -16,6 +16,7 @@
  */
 
 #include <wx/graphics.h>
+#include "frame.hpp"
 #include "graphics_editor.hpp"
 
 GraphicsEditor::GraphicsEditor(wxWindow* p_parent,
@@ -26,6 +27,8 @@ GraphicsEditor::GraphicsEditor(wxWindow* p_parent,
 		 const wxString& name)
   : wxPanel(p_parent, winid, pos, size, style, name)
 {
+  mp_frame = NULL;
+
   Bind(wxEVT_PAINT, &GraphicsEditor::on_paint, this, winid);
   //Bind(wxEVT_SIZE, &GraphicsEditor::on_resize, this, winid);
 }
@@ -61,8 +64,14 @@ void GraphicsEditor::on_paint(wxPaintEvent& evt)
   p_gc->SetBrush(*wxGREY_BRUSH);
   p_gc->FillPath(grey_path);
 
-  p_gc->SetPen(*wxBLACK_PEN);
-  p_gc->StrokeLine(0, 0, 200, 200);
+  if (mp_frame) {
+    int width = mp_frame->get_settings().get_width();
+    int height = mp_frame->get_settings().get_height();
+    wxImage scaled_image = mp_frame->get_image().Scale(width, height, wxIMAGE_QUALITY_HIGH);
+    wxGraphicsBitmap bitmap = p_gc->CreateBitmapFromImage(scaled_image);
+
+    p_gc->DrawBitmap(bitmap, 0, 0, width, height);
+  }
 
   delete p_gc;
 }

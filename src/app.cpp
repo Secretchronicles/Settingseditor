@@ -23,8 +23,8 @@
 #include <wx/xrc/xmlres.h>
 #include "utf8.hpp"
 #include "cache.hpp"
-#include "graphics_editor.hpp"
 #include "frame.hpp"
+#include "graphics_editor.hpp"
 #include "app.hpp"
 
 /***************************************
@@ -35,6 +35,7 @@ bool SettingseditorApp::OnInit()
 {
   std::locale::global(std::locale("")); // Initialise to current environment locale
 
+  wxImage::AddHandler(new wxPNGHandler);
   wxXmlResource::Get()->InitAllHandlers();
   wxXmlResource::Get()->Load("../ui/mainwindow.xrc");
 
@@ -156,6 +157,9 @@ void SettingseditorApp::on_frame_list_item_selected(wxCommandEvent& evt)
   p_author_text  ->SetValue(utf8_to_wxstr(p_frame->get_settings().get_author()));
   p_license_text ->SetValue(utf8_to_wxstr(p_frame->get_settings().get_license()));
   p_other_text   ->SetValue(utf8_to_wxstr(p_frame->get_settings().get_other()));
+
+  // Display newly selected image
+  mp_graphicseditor->set_frame(p_frame);
 
   // Set last frame for saving next time
   m_last_selected_frame = evt.GetInt();

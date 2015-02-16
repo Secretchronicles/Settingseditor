@@ -17,8 +17,8 @@
 
 #include <iostream>
 #include "cache.hpp"
-#include "graphics_editor.hpp"
 #include "frame.hpp"
+#include "graphics_editor.hpp"
 #include "app.hpp"
 
 // So wxWidgets wants me to not have a main() function. Go figure.

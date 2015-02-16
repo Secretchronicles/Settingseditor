@@ -17,12 +17,19 @@
 
 #include <cstdlib>
 #include <cstring>
+#include <wx/image.h>
 #include "frame.hpp"
+#include "utf8.hpp"
 
 Frame::Frame(Pathie::Path png_path)
   : m_png_path(png_path), m_settings(png_path.sub_ext(".settings"))
 {
-  //
+  mp_wximage = new wxImage(utf8_to_wxstr(png_path.str()), wxBITMAP_TYPE_PNG); // Doesn't want to be allocated on the stack...? Fails with a compiler error if done so.
+}
+
+Frame::~Frame()
+{
+  delete mp_wximage;
 }
 
 Frame::TscSettings::TscSettings(const Pathie::Path& path)
