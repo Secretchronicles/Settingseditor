@@ -40,7 +40,7 @@ private:
   void on_left_mouse_button_up(wxMouseEvent& evt);
   void on_mouse_motion(wxMouseEvent& evt);
 
-  void update_spin_widgets();
+  void update_collision_rect(int x, int y, int w, int h);
 
   wxBrush* mp_mask_brush;
   wxBrush* mp_border_brush;

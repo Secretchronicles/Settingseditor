@@ -51,9 +51,9 @@ GraphicsEditor::~GraphicsEditor()
 void GraphicsEditor::set_frame(Frame* p_frame)
 {
   mp_frame = p_frame;
+  Frame::TscSettings& settings = p_frame->get_settings();
 
-  update_spin_widgets();
-
+  update_collision_rect(settings.get_col_x(), settings.get_col_y(), settings.get_col_width(), settings.get_col_height());
   Refresh();
 }
 
@@ -131,16 +131,21 @@ void GraphicsEditor::on_resize(wxSizeEvent& evt)
 
 void GraphicsEditor::on_left_mouse_button_down(wxMouseEvent& evt)
 {
-  Frame::TscSettings& settings = mp_frame->get_settings();
+  // Ignore click that is not within the image bounds.
+  if (evt.GetX() >= m_scaled_x + m_scaled_w || evt.GetY() >= m_scaled_y + m_scaled_h)
+    return;
 
-  settings.set_col_x(evt.GetX() - m_scaled_x);
-  settings.set_col_y(evt.GetY() - m_scaled_y);
+  update_collision_rect(evt.GetX() - m_scaled_x, evt.GetY() - m_scaled_y, 0, 0);
   Refresh();
 }
 
 void GraphicsEditor::on_left_mouse_button_up(wxMouseEvent& evt)
 {
   Frame::TscSettings& settings = mp_frame->get_settings();
+
+  // Ignore click that is not within the image bounds.
+  if (evt.GetX() >= m_scaled_x + m_scaled_w || evt.GetY() >= m_scaled_y + m_scaled_h)
+    return;
 
   int width = evt.GetX() - m_scaled_x;
   int height = evt.GetY() - m_scaled_y;
@@ -156,10 +161,7 @@ void GraphicsEditor::on_left_mouse_button_up(wxMouseEvent& evt)
     height *= -1; // Make it positive
   }
 
-  settings.set_col_width(width);
-  settings.set_col_height(height);
-
-  update_spin_widgets();
+  update_collision_rect(settings.get_col_x(), settings.get_col_y(), width, height);
   Refresh();
 }
 
@@ -168,21 +170,52 @@ void GraphicsEditor::on_mouse_motion(wxMouseEvent& evt)
   if (evt.LeftIsDown()) {
     Frame::TscSettings& settings = mp_frame->get_settings();
 
-    settings.set_col_width(evt.GetX() - m_scaled_x);
-    settings.set_col_height(evt.GetY() - m_scaled_y);
+    // Ignore motion that is not within the image bounds.
+    if (evt.GetX() >= m_scaled_x + m_scaled_w || evt.GetY() >= m_scaled_y + m_scaled_h)
+      return;
 
-    update_spin_widgets();
+    update_collision_rect(settings.get_col_x(), settings.get_col_y(), evt.GetX() - m_scaled_x, evt.GetY() - m_scaled_y);
     Refresh();
   }
 }
 
-void GraphicsEditor::update_spin_widgets()
+/**
+ * Sets the frame’s collision rectangle to the given values. Values
+ * out of the image border are automatically cropped down to the
+ * borders.
+ *
+ * Also sets the spin widgets to the appropriate values.
+ */
+void GraphicsEditor::update_collision_rect(int x, int y, int w, int h)
 {
   SettingseditorApp* p_app = static_cast<SettingseditorApp*>(wxTheApp);
   Frame::TscSettings& settings = mp_frame->get_settings();
+  wxSpinCtrl* p_col_x_spin = XRCCTRL(*p_app->get_mainwindow(), "col_x_spin", wxSpinCtrl);
+  wxSpinCtrl* p_col_y_spin = XRCCTRL(*p_app->get_mainwindow(), "col_y_spin", wxSpinCtrl);
+  wxSpinCtrl* p_col_w_spin = XRCCTRL(*p_app->get_mainwindow(), "col_w_spin", wxSpinCtrl);
+  wxSpinCtrl* p_col_h_spin = XRCCTRL(*p_app->get_mainwindow(), "col_h_spin", wxSpinCtrl);
 
-  XRCCTRL(*p_app->get_mainwindow(), "col_x_spin", wxSpinCtrl)->SetValue(settings.get_col_x());
-  XRCCTRL(*p_app->get_mainwindow(), "col_y_spin", wxSpinCtrl)->SetValue(settings.get_col_y());
-  XRCCTRL(*p_app->get_mainwindow(), "col_w_spin", wxSpinCtrl)->SetValue(settings.get_col_width());
-  XRCCTRL(*p_app->get_mainwindow(), "col_h_spin", wxSpinCtrl)->SetValue(settings.get_col_height());
+  p_col_x_spin->SetValue(x);
+  p_col_y_spin->SetValue(y);
+  p_col_w_spin->SetValue(w);
+  p_col_h_spin->SetValue(h);
+
+  // Adjust new maximums of the spin widgets so the rectangle may
+  // not go out of the actual image.
+  p_col_x_spin->SetRange(0, settings.get_width() - w);
+  p_col_y_spin->SetRange(0, settings.get_height() - h);
+  p_col_w_spin->SetRange(0, settings.get_width() - x);
+  p_col_h_spin->SetRange(0, settings.get_height() - y);
+
+  // Changing the maximums can change the actual value. Get the new values
+  // for storing them.
+  x = p_col_x_spin->GetValue();
+  y = p_col_y_spin->GetValue();
+  w = p_col_w_spin->GetValue();
+  h = p_col_h_spin->GetValue();
+
+  settings.set_col_x(x);
+  settings.set_col_y(y);
+  settings.set_col_width(w);
+  settings.set_col_height(h);
 }
