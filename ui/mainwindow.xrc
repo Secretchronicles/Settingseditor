@@ -2,7 +2,7 @@
 <resource xmlns="http://www.wxwindows.org/wxxrc" version="2.3.0.1">
 	<object class="wxFrame" name="mainwindow">
 		<style>wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL</style>
-		<size>605,410</size>
+		<size>934,602</size>
 		<title>TSC Settingseditor</title>
 		<centered>1</centered>
 		<aui_managed>0</aui_managed>
@@ -111,36 +111,80 @@
 													<option>0</option>
 													<flag>wxALL</flag>
 													<border>5</border>
-													<object class="wxButton" name="left_button">
-														<label>←</label>
-														<default>0</default>
+													<object class="wxStaticText" name="m_staticText7">
+														<label>X:</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>1</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxSpinCtrl" name="col_x_spin">
+														<style>wxSP_ARROW_KEYS</style>
+														<value>0</value>
+														<min>0</min>
+														<max>4096</max>
 													</object>
 												</object>
 												<object class="sizeritem">
 													<option>0</option>
 													<flag>wxALL</flag>
 													<border>5</border>
-													<object class="wxButton" name="right_button">
-														<label>→</label>
-														<default>0</default>
+													<object class="wxStaticText" name="m_staticText8">
+														<label>Y:</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>1</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxSpinCtrl" name="col_y_spin">
+														<style>wxSP_ARROW_KEYS</style>
+														<value>0</value>
+														<min>0</min>
+														<max>4096</max>
 													</object>
 												</object>
 												<object class="sizeritem">
 													<option>0</option>
 													<flag>wxALL</flag>
 													<border>5</border>
-													<object class="wxButton" name="up_button">
-														<label>↑</label>
-														<default>0</default>
+													<object class="wxStaticText" name="m_staticText9">
+														<label>W:</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>1</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxSpinCtrl" name="col_w_spin">
+														<style>wxSP_ARROW_KEYS</style>
+														<value>0</value>
+														<min>0</min>
+														<max>4096</max>
 													</object>
 												</object>
 												<object class="sizeritem">
 													<option>0</option>
 													<flag>wxALL</flag>
 													<border>5</border>
-													<object class="wxButton" name="down_button">
-														<label>↓</label>
-														<default>0</default>
+													<object class="wxStaticText" name="m_staticText10">
+														<label>H:</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>1</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxSpinCtrl" name="col_h_spin">
+														<style>wxSP_ARROW_KEYS</style>
+														<value>0</value>
+														<min>0</min>
+														<max>4096</max>
 													</object>
 												</object>
 											</object>
