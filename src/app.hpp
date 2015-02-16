@@ -31,8 +31,6 @@ private:
   void setup_event_handlers();
 
   void add_frame(Pathie::Path path);
-  wxString utf8_to_wxstr(const std::string& utf8);
-  std::string wxstr_to_utf8(const wxString& wxstr);
 
   void on_menu_file_quit(wxCommandEvent& evt);
   void on_add_frame_button_clicked(wxCommandEvent& evt);

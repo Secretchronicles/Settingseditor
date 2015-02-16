@@ -21,6 +21,7 @@
 #include <wx/statline.h>
 #include <wx/spinctrl.h>
 #include <wx/xrc/xmlres.h>
+#include "utf8.hpp"
 #include "cache.hpp"
 #include "graphics_editor.hpp"
 #include "frame.hpp"
@@ -87,16 +88,6 @@ void SettingseditorApp::setup_event_handlers()
 
   // List
   XRCCTRL(*mp_mainwindow, "frame_listbox", wxListBox)->Bind(wxEVT_LISTBOX, &SettingseditorApp::on_frame_list_item_selected, this, wxID_ANY);
-}
-
-wxString SettingseditorApp::utf8_to_wxstr(const std::string& utf8)
-{
-  return wxString::FromUTF8(utf8.c_str()); // FromUTF8() copies its argument, so no memory problem.
-}
-
-std::string SettingseditorApp::wxstr_to_utf8(const wxString& wxstr)
-{
-  return std::string(wxstr.ToUTF8()); // Must be copied as the result of ToUTF8() is unstable and may vanish
 }
 
 void SettingseditorApp::add_frame(Pathie::Path path)
