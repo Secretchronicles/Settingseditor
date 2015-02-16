@@ -40,34 +40,36 @@ void Frame::TscSettings::parse_settingsfile(const Pathie::Path& path)
     // The single = in the below if/else if statements are intended.
     size_t pos = 0;
     if ((pos = line.find("width ")) != std::string::npos) {
-      m_width = atoi(line.substr(pos).c_str());
+      m_width = atoi(line.substr(pos + 6).c_str());
     }
     else if ((pos = line.find("height ")) != std::string::npos) {
-      m_height = atoi(line.substr(pos).c_str());
+      m_height = atoi(line.substr(pos + 7).c_str());
     }
     else if ((pos = line.find("name ")) != std::string::npos) {
-      m_name = line.substr(pos);
+      m_name = line.substr(pos + 5);
     }
     else if ((pos = line.find("author ")) != std::string::npos) {
-      m_author = line.substr(pos);
+      m_author = line.substr(pos + 7);
     }
     else if ((pos = line.find("license ")) != std::string::npos) {
-      m_license = line.substr(pos);
+      m_license = line.substr(pos + 8);
     }
-    else if ((pos = line.find("col_rect")) != std::string::npos) {
+    else if ((pos = line.find("col_rect ")) != std::string::npos) {
       size_t pos2 = 0;
+      pos += 9;
+
       pos2 = line.find(" ", pos);
       m_col_x = atoi(line.substr(pos, pos2 - pos).c_str());
 
-      pos = pos2;
+      pos = pos2 + 1;
       pos2 = line.find(" ", pos);
       m_col_y = atoi(line.substr(pos, pos2 - pos).c_str());
 
-      pos = pos2;
+      pos = pos2 + 1;
       pos2 = line.find(" ", pos);
       m_col_w = atoi(line.substr(pos, pos2 - pos).c_str());
 
-      pos = pos2;
+      pos = pos2 + 1;
       m_col_h = atoi(line.substr(pos).c_str());
     }
     else {
