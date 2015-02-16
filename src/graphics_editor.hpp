@@ -36,6 +36,11 @@ public:
 private:
   void on_paint(wxPaintEvent& evt);
   void on_resize(wxSizeEvent& evt);
+  void on_left_mouse_button_down(wxMouseEvent& evt);
+  void on_left_mouse_button_up(wxMouseEvent& evt);
+  void on_mouse_motion(wxMouseEvent& evt);
+
+  void update_spin_widgets();
 
   wxBrush* mp_mask_brush;
   wxBrush* mp_border_brush;
