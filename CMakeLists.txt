@@ -3,6 +3,7 @@ enable_language(CXX)
 project(TSC_Settingseditor)
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
+include(ExternalProject)
 
 ########################################
 # Version number
@@ -45,8 +46,14 @@ include_directories(${CMAKE_SOURCE_DIR}/inih ${CMAKE_SOURCE_DIR}/inih/cpp)
 add_library(inih STATIC ${inih_sources})
 
 # Pathie
-add_subdirectory(${CMAKE_SOURCE_DIR}/pathie
-  EXCLUDE_FROM_ALL)
+ExternalProject_Add(
+  pathie
+  PREFIX "${CMAKE_BINARY_DIR}/pathie"
+  DOWNLOAD_COMMAND ""
+  UPDATE_COMMAND ""
+  CMAKE_ARGS "-DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/pathie/install"
+  SOURCE_DIR "${CMAKE_SOURCE_DIR}/pathie")
+include_directories(${CMAKE_BINARY_DIR}/pathie/install/include/pathie)
 
 ########################################
 # Dependencies
@@ -68,7 +75,8 @@ file(GLOB_RECURSE editor_sources
 # Targets
 
 add_executable(tsc-settingseditor ${editor_sources})
-target_link_libraries(tsc-settingseditor ${wxWidgets_LIBRARIES} pathie inih)
+target_link_libraries(tsc-settingseditor ${wxWidgets_LIBRARIES} ${CMAKE_BINARY_DIR}/pathie/install/lib/libpathie.a inih)
+add_dependencies(tsc-settingseditor pathie)
 
 ########################################
 # Installation information
