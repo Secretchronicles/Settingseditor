@@ -15,9 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <wx/spinctrl.h>
+#include <wx/xrc/xmlres.h>
 #include <wx/graphics.h>
 #include "frame.hpp"
 #include "graphics_editor.hpp"
+#include "cache.hpp"
+#include "app.hpp"
 
 GraphicsEditor::GraphicsEditor(wxWindow* p_parent,
 		 wxWindowID winid,
@@ -28,9 +32,30 @@ GraphicsEditor::GraphicsEditor(wxWindow* p_parent,
   : wxPanel(p_parent, winid, pos, size, style, name)
 {
   mp_frame = NULL;
+  mp_mask_brush = new wxBrush(wxColour(100, 255, 255, 200));
+  mp_border_brush = new wxBrush(wxColour(200, 200, 200, wxALPHA_OPAQUE));
 
   Bind(wxEVT_PAINT, &GraphicsEditor::on_paint, this, winid);
   //Bind(wxEVT_SIZE, &GraphicsEditor::on_resize, this, winid);
+}
+
+GraphicsEditor::~GraphicsEditor()
+{
+  delete mp_border_brush;
+  delete mp_mask_brush;
+}
+
+void GraphicsEditor::set_frame(Frame* p_frame)
+{
+  SettingseditorApp* p_app = static_cast<SettingseditorApp*>(wxTheApp);
+  mp_frame = p_frame;
+
+  XRCCTRL(*p_app->get_mainwindow(), "col_x_spin", wxSpinCtrl)->SetValue(p_frame->get_settings().get_col_x());
+  XRCCTRL(*p_app->get_mainwindow(), "col_y_spin", wxSpinCtrl)->SetValue(p_frame->get_settings().get_col_y());
+  XRCCTRL(*p_app->get_mainwindow(), "col_w_spin", wxSpinCtrl)->SetValue(p_frame->get_settings().get_col_width());
+  XRCCTRL(*p_app->get_mainwindow(), "col_h_spin", wxSpinCtrl)->SetValue(p_frame->get_settings().get_col_height());
+
+  Refresh();
 }
 
 void GraphicsEditor::on_paint(wxPaintEvent& evt)
@@ -65,8 +90,9 @@ void GraphicsEditor::on_paint(wxPaintEvent& evt)
   p_gc->FillPath(grey_path);
 
   if (mp_frame) {
-    int width = mp_frame->get_settings().get_width();
-    int height = mp_frame->get_settings().get_height();
+    Frame::TscSettings& settings = mp_frame->get_settings();
+    int width = settings.get_width();
+    int height = settings.get_height();
     wxImage scaled_image = mp_frame->get_image().Scale(width, height, wxIMAGE_QUALITY_HIGH);
     wxGraphicsBitmap bitmap = p_gc->CreateBitmapFromImage(scaled_image);
     // Center the image on the available drawing area
@@ -75,13 +101,25 @@ void GraphicsEditor::on_paint(wxPaintEvent& evt)
     m_scaled_x = (dimensions.GetWidth() - m_scaled_w) / 2;
     m_scaled_y = (dimensions.GetHeight() - m_scaled_h) / 2;
 
+    // Draw the image
     p_gc->DrawBitmap(bitmap, m_scaled_x, m_scaled_y, width, height);
 
-    p_gc->SetPen(*wxBLUE_PEN);
-    p_gc->StrokeLine(-9999, m_scaled_y, 9999, m_scaled_y);
-    p_gc->StrokeLine(m_scaled_x + width, -9999, m_scaled_x + width, 9999);
-    p_gc->StrokeLine(9999, m_scaled_y + height, -9999, m_scaled_y + height);
-    p_gc->StrokeLine(m_scaled_x, 9999, m_scaled_x, -9999);
+    /* Draw the collision rect mask. */
+    wxGraphicsPath colmask = p_gc->CreatePath();
+    colmask.AddRectangle(m_scaled_x + settings.get_col_x(),
+			 m_scaled_y + settings.get_col_y(),
+			 settings.get_col_width(),
+			 settings.get_col_height());
+    p_gc->SetBrush(*mp_mask_brush);
+    p_gc->FillPath(colmask);
+
+    // Cover the area outside the image borders. Overlapping pathes
+    // seem to have a cut effect (I found that by accident).
+    wxGraphicsPath bordermask = p_gc->CreatePath();
+    bordermask.AddRectangle(0, 0, dimensions.GetWidth(), dimensions.GetHeight());
+    bordermask.AddRectangle(m_scaled_x, m_scaled_y, m_scaled_w, m_scaled_h);
+    p_gc->SetBrush(*mp_border_brush);
+    p_gc->FillPath(bordermask);
   }
 
   delete p_gc;

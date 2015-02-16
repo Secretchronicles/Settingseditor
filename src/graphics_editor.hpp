@@ -28,14 +28,17 @@ public:
 		 const wxSize& size = wxDefaultSize,
 		 long style = wxNO_BORDER,
 		 const wxString& name = "GraphicsEditor");
+  virtual ~GraphicsEditor();
 
-  inline void set_frame(Frame* p_frame){mp_frame = p_frame; Refresh();}
+  void set_frame(Frame* p_frame);
   inline Frame* get_frame(){return mp_frame;}
 
 private:
   void on_paint(wxPaintEvent& evt);
   void on_resize(wxSizeEvent& evt);
 
+  wxBrush* mp_mask_brush;
+  wxBrush* mp_border_brush;
   Frame* mp_frame;
   int m_scaled_x;
   int m_scaled_y;

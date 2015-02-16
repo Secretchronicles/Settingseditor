@@ -24,9 +24,13 @@
 
 class SettingseditorApp: public wxApp
 {
+public:
+  inline wxFrame* get_mainwindow(){return mp_mainwindow;}
+
+private:
   virtual bool OnInit();
   virtual int OnExit();
-private:
+
   void setup_graphicseditor();
   void setup_event_handlers();
 
