@@ -73,6 +73,7 @@ public:
 
   inline TscSettings& get_settings(){return m_settings;}
   inline wxImage& get_image(){return *mp_wximage;}
+  inline Pathie::Path get_png_path(){return m_png_path;}
 private:
   Pathie::Path m_png_path;
   TscSettings m_settings;

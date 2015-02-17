@@ -92,6 +92,7 @@ void SettingseditorApp::setup_event_handlers()
 {
   // Menus
   mp_mainwindow->Bind(wxEVT_COMMAND_MENU_SELECTED, &SettingseditorApp::on_menu_file_quit, this, wxID_EXIT);
+  mp_mainwindow->Bind(wxEVT_COMMAND_MENU_SELECTED, &SettingseditorApp::on_menu_file_save, this, wxID_SAVE);
   mp_mainwindow->Bind(wxEVT_COMMAND_MENU_SELECTED, &SettingseditorApp::on_menu_help_about, this, wxID_ABOUT);
   mp_mainwindow->Bind(wxEVT_COMMAND_MENU_SELECTED, &SettingseditorApp::on_menu_edit_apply_to_all, this, XRCID("menu_edit_apply_to_all"));
 
@@ -128,6 +129,17 @@ void SettingseditorApp::add_frame(Pathie::Path path)
 void SettingseditorApp::on_menu_file_quit(wxCommandEvent& evt)
 {
   mp_mainwindow->Close();
+}
+
+void SettingseditorApp::on_menu_file_save(wxCommandEvent& evt)
+{
+  std::vector<Frame*>::iterator iter;
+  for(iter=m_frames.begin(); iter != m_frames.end(); iter++) {
+    Frame* p_frame = *iter;
+    Pathie::Path target_path = p_frame->get_png_path().sub_ext(".settings");
+
+    p_frame->get_settings().save(target_path);
+  }
 }
 
 void SettingseditorApp::on_menu_edit_apply_to_all(wxCommandEvent& evt)

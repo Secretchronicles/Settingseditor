@@ -37,6 +37,7 @@ private:
   void add_frame(Pathie::Path path);
 
   void on_menu_file_quit(wxCommandEvent& evt);
+  void on_menu_file_save(wxCommandEvent& evt);
   void on_menu_edit_apply_to_all(wxCommandEvent& evt);
   void on_menu_help_about(wxCommandEvent& evt);
   void on_add_frame_button_clicked(wxCommandEvent& evt);
