@@ -139,7 +139,14 @@ void SettingseditorApp::on_add_frame_button_clicked(wxCommandEvent& evt)
 
 void SettingseditorApp::on_del_frame_button_clicked(wxCommandEvent& evt)
 {
-  std::cout << "TODO" << std::endl;
+  wxListBox* p_listbox = XRCCTRL(*mp_mainwindow, "frame_listbox", wxListBox);
+  int index = p_listbox->GetSelection();
+
+  if (index == wxNOT_FOUND) // no selection
+    return;
+
+  p_listbox->Delete(index);
+  m_frames.erase(m_frames.begin() + index);
 }
 
 void SettingseditorApp::on_frame_list_item_selected(wxCommandEvent& evt)
