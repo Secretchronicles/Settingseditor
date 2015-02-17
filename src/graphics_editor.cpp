@@ -197,25 +197,37 @@ void GraphicsEditor::update_collision_rect(int x, int y, int w, int h)
   wxSpinCtrl* p_col_w_spin = XRCCTRL(*p_app->get_mainwindow(), "col_w_spin", wxSpinCtrl);
   wxSpinCtrl* p_col_h_spin = XRCCTRL(*p_app->get_mainwindow(), "col_h_spin", wxSpinCtrl);
 
+  /* Clip parameters into the valid range. I.e. X and Y are not allowed
+   * to be out of the image bounds, and width and height are not allowed
+   * to expand beyond the image bounds (substraction of image border and
+   * edge). */
+  if (x < 0)
+    x = 0;
+  if (y < 0)
+    y = 0;
+  if (x >= settings.get_width())
+    x = settings.get_width() - 1;
+  if (y >= settings.get_height())
+    y = settings.get_height() - 1;
+  if (w >= (settings.get_width() - x)) // width - x is 0 at minimum now
+    w = settings.get_width() - x;
+  if (h >= settings.get_height() - y)  // height - y is 0 at minimum now
+    h = settings.get_height() - y;
+
+  // Adjust new maximums of the spin widgets to reflect the above
+  // (-1 below because the first index is 0).
+  p_col_x_spin->SetRange(0, settings.get_width() - 1);
+  p_col_y_spin->SetRange(0, settings.get_height() - 1);
+  p_col_w_spin->SetRange(0, settings.get_width() - x);
+  p_col_h_spin->SetRange(0, settings.get_height() - y);
+
+  // Show cropped values
   p_col_x_spin->SetValue(x);
   p_col_y_spin->SetValue(y);
   p_col_w_spin->SetValue(w);
   p_col_h_spin->SetValue(h);
 
-  // Adjust new maximums of the spin widgets so the rectangle may
-  // not go out of the actual image.
-  p_col_x_spin->SetRange(0, settings.get_width() - w);
-  p_col_y_spin->SetRange(0, settings.get_height() - h);
-  p_col_w_spin->SetRange(0, settings.get_width() - x);
-  p_col_h_spin->SetRange(0, settings.get_height() - y);
-
-  // Changing the maximums can change the actual value. Get the new values
-  // for storing them.
-  x = p_col_x_spin->GetValue();
-  y = p_col_y_spin->GetValue();
-  w = p_col_w_spin->GetValue();
-  h = p_col_h_spin->GetValue();
-
+  // Store cropped values
   settings.set_col_x(x);
   settings.set_col_y(y);
   settings.set_col_width(w);

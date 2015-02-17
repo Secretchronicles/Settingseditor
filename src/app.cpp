@@ -237,7 +237,7 @@ void SettingseditorApp::on_frame_list_item_selected(wxCommandEvent& evt)
   p_license_text ->SetValue(utf8_to_wxstr(p_frame->get_settings().get_license()));
   p_other_text   ->SetValue(utf8_to_wxstr(p_frame->get_settings().get_other()));
 
-  // Enable the notebook if it wasn't enabled yet (first frame)
+  // Enable the notebook if it wasn't enabled yet (no selection yet)
   XRCCTRL(*mp_mainwindow, "notebook", wxNotebook)->Enable();
 
   // Display newly selected image
