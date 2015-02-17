@@ -17,7 +17,8 @@ Building
 Clone the repository and initialise the Git submodules:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-$ git clone git://github.com/Secretchronicles/TSC-Settingseditor.git
+$ git clone git://github.com/Secretchronicles/Settingseditor.git
+$ cd Settingseditor
 $ git submodule init
 $ git submodule update
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -44,6 +45,7 @@ License
 -------
 
 A specialised TSC settings files editor.
+
 Copyright © 2015 Marvin Gülker
 
 This program is free software: you can redistribute it and/or modify
