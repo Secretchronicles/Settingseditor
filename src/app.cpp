@@ -93,6 +93,7 @@ void SettingseditorApp::setup_event_handlers()
   // Menus
   mp_mainwindow->Bind(wxEVT_COMMAND_MENU_SELECTED, &SettingseditorApp::on_menu_file_quit, this, wxID_EXIT);
   mp_mainwindow->Bind(wxEVT_COMMAND_MENU_SELECTED, &SettingseditorApp::on_menu_help_about, this, wxID_ABOUT);
+  mp_mainwindow->Bind(wxEVT_COMMAND_MENU_SELECTED, &SettingseditorApp::on_menu_edit_apply_to_all, this, XRCID("menu_edit_apply_to_all"));
 
   // Frame handling
   XRCCTRL(*mp_mainwindow, "add_frame_button", wxButton)->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &SettingseditorApp::on_add_frame_button_clicked, this, XRCID("add_frame_button"));
@@ -127,6 +128,30 @@ void SettingseditorApp::add_frame(Pathie::Path path)
 void SettingseditorApp::on_menu_file_quit(wxCommandEvent& evt)
 {
   mp_mainwindow->Close();
+}
+
+void SettingseditorApp::on_menu_edit_apply_to_all(wxCommandEvent& evt)
+{
+  wxListBox* p_listbox = XRCCTRL(*mp_mainwindow, "frame_listbox", wxListBox);
+  int index = p_listbox->GetSelection();
+
+  if (index == wxNOT_FOUND) // Nothing selected
+    return;
+
+  Frame::TscSettings template_settings(m_frames[index]->get_settings()); // Copy
+  std::vector<Frame*>::iterator iter;
+  for(iter=m_frames.begin(); iter != m_frames.end(); iter++) {
+    Frame::TscSettings& settings = (*iter)->get_settings();
+
+    settings.set_width(template_settings.get_width());
+    settings.set_height(template_settings.get_height());
+    settings.set_col_x(template_settings.get_col_x());
+    settings.set_col_y(template_settings.get_col_y());
+    settings.set_col_width(template_settings.get_col_width());
+    settings.set_col_height(template_settings.get_col_height());
+  }
+
+  mp_graphicseditor->Refresh();
 }
 
 void SettingseditorApp::on_menu_help_about(wxCommandEvent& evt)
