@@ -95,6 +95,10 @@ void SettingseditorApp::setup_event_handlers()
   XRCCTRL(*mp_mainwindow, "col_y_spin", wxSpinCtrl)->Bind(wxEVT_SPINCTRL, &SettingseditorApp::on_colrect_spin_changed, this, wxID_ANY);
   XRCCTRL(*mp_mainwindow, "col_w_spin", wxSpinCtrl)->Bind(wxEVT_SPINCTRL, &SettingseditorApp::on_colrect_spin_changed, this, wxID_ANY);
   XRCCTRL(*mp_mainwindow, "col_h_spin", wxSpinCtrl)->Bind(wxEVT_SPINCTRL, &SettingseditorApp::on_colrect_spin_changed, this, wxID_ANY);
+
+  // Bounding borders rectangle spin button
+  XRCCTRL(*mp_mainwindow, "width_spin", wxSpinCtrl)->Bind(wxEVT_SPINCTRL, &SettingseditorApp::on_borders_spin_changed, this, wxID_ANY);
+  XRCCTRL(*mp_mainwindow, "height_spin", wxSpinCtrl)->Bind(wxEVT_SPINCTRL, &SettingseditorApp::on_borders_spin_changed, this, wxID_ANY);
 }
 
 void SettingseditorApp::add_frame(Pathie::Path path)
@@ -178,31 +182,26 @@ void SettingseditorApp::on_colrect_spin_changed(wxSpinEvent& evt)
   wxSpinCtrl* p_col_w_spin = XRCCTRL(*mp_mainwindow, "col_w_spin", wxSpinCtrl);
   wxSpinCtrl* p_col_h_spin = XRCCTRL(*mp_mainwindow, "col_h_spin", wxSpinCtrl);
 
-  Frame::TscSettings& settings = m_frames[XRCCTRL(*mp_mainwindow, "frame_listbox", wxListBox)->GetSelection()]->get_settings();
-
   int x = p_col_x_spin->GetValue();
   int y = p_col_y_spin->GetValue();
   int w = p_col_w_spin->GetValue();
   int h = p_col_h_spin->GetValue();
 
-  // Adjust new maximums of the spin widgets so the rectangle may
-  // not go out of the actual image.
-  p_col_x_spin->SetRange(0, settings.get_width() - w);
-  p_col_y_spin->SetRange(0, settings.get_height() - h);
-  p_col_w_spin->SetRange(0, settings.get_width() - x);
-  p_col_h_spin->SetRange(0, settings.get_height() - y);
+  // Adjust all the values. This might cause some redundant logic to run,
+  // but that’s better than duplicating all the code here.
+  mp_graphicseditor->update_collision_rect(x, y, w, h);
+  mp_graphicseditor->Refresh();
+}
 
-  // Changing the maximums can change the actual value. Get the new values
-  // for storing them.
-  x = p_col_x_spin->GetValue();
-  y = p_col_y_spin->GetValue();
-  w = p_col_w_spin->GetValue();
-  h = p_col_h_spin->GetValue();
+void SettingseditorApp::on_borders_spin_changed(wxSpinEvent& evt)
+{
+  wxSpinCtrl* p_width_spin  = XRCCTRL(*mp_mainwindow, "width_spin", wxSpinCtrl);
+  wxSpinCtrl* p_height_spin = XRCCTRL(*mp_mainwindow, "height_spin", wxSpinCtrl);
+  Frame::TscSettings& settings = m_frames[XRCCTRL(*mp_mainwindow, "frame_listbox", wxListBox)->GetSelection()]->get_settings();
 
-  settings.set_col_x(x);
-  settings.set_col_y(y);
-  settings.set_col_width(w);
-  settings.set_col_height(h);
+  settings.set_width(p_width_spin->GetValue());
+  settings.set_height(p_height_spin->GetValue());
 
+  mp_graphicseditor->update_collision_rect(settings.get_col_x(), settings.get_col_y(), settings.get_col_width(), settings.get_col_height());
   mp_graphicseditor->Refresh();
 }

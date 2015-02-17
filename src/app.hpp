@@ -41,6 +41,7 @@ private:
   void on_del_frame_button_clicked(wxCommandEvent& evt);
   void on_frame_list_item_selected(wxCommandEvent& evt);
   void on_colrect_spin_changed(wxSpinEvent& evt);
+  void on_borders_spin_changed(wxSpinEvent& evt);
 
   CacheInfo* mp_cache_info;
   wxFrame* mp_mainwindow;

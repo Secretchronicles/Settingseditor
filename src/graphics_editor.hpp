@@ -32,6 +32,7 @@ public:
 
   void set_frame(Frame* p_frame);
   inline Frame* get_frame(){return mp_frame;}
+  void update_collision_rect(int x, int y, int w, int h);
 
 private:
   void on_paint(wxPaintEvent& evt);
@@ -39,8 +40,6 @@ private:
   void on_left_mouse_button_down(wxMouseEvent& evt);
   void on_left_mouse_button_up(wxMouseEvent& evt);
   void on_mouse_motion(wxMouseEvent& evt);
-
-  void update_collision_rect(int x, int y, int w, int h);
 
   wxBrush* mp_mask_brush;
   wxBrush* mp_border_brush;
