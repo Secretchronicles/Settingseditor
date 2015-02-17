@@ -27,6 +27,11 @@
 			<label>MyMenuBar</label>
 			<object class="wxMenu" name="menu_file">
 				<label>File</label>
+				<object class="wxMenuItem" name="wxID_SAVE">
+					<label>Save</label>
+					<help></help>
+				</object>
+				<object class="separator" />
 				<object class="wxMenuItem" name="wxID_EXIT">
 					<label>_Quit</label>
 					<help></help>
@@ -37,6 +42,10 @@
 				<label>Edit</label>
 				<object class="wxMenuItem" name="menu_edit_preview">
 					<label>Preview…</label>
+					<help></help>
+				</object>
+				<object class="wxMenuItem" name="menu_edit_apply_to_all">
+					<label>Apply to all</label>
 					<help></help>
 				</object>
 			</object>
