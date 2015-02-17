@@ -152,8 +152,13 @@ void SettingseditorApp::on_del_frame_button_clicked(wxCommandEvent& evt)
   if (index == wxNOT_FOUND) // no selection
     return;
 
+  p_listbox->Deselect(index);
   p_listbox->Delete(index);
   m_frames.erase(m_frames.begin() + index);
+
+  // Unshow any image and disable the notebook as now nothing is selected
+  mp_graphicseditor->set_frame(NULL);
+  XRCCTRL(*mp_mainwindow, "notebook", wxNotebook)->Disable();
 }
 
 void SettingseditorApp::on_up_frame_button_clicked(wxCommandEvent& evt)

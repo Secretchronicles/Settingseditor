@@ -53,7 +53,9 @@ void GraphicsEditor::set_frame(Frame* p_frame)
   mp_frame = p_frame;
   Frame::TscSettings& settings = p_frame->get_settings();
 
-  update_collision_rect(settings.get_col_x(), settings.get_col_y(), settings.get_col_width(), settings.get_col_height());
+  if (p_frame)
+    update_collision_rect(settings.get_col_x(), settings.get_col_y(), settings.get_col_width(), settings.get_col_height());
+
   Refresh();
 }
 
