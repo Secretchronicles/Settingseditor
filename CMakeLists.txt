@@ -99,3 +99,5 @@ add_dependencies(tsc-settingseditor pathie)
 
 install(TARGETS tsc-settingseditor
   DESTINATION bin)
+install(FILES ${CMAKE_SOURCE_DIR}/ui/mainwindow.xrc
+  DESTINATION share/tsc-settingseditor)

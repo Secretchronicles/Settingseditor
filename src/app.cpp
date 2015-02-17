@@ -39,7 +39,9 @@ bool SettingseditorApp::OnInit()
 
   wxImage::AddHandler(new wxPNGHandler);
   wxXmlResource::Get()->InitAllHandlers();
-  wxXmlResource::Get()->Load("../ui/mainwindow.xrc");
+
+  Pathie::Path xrcfile = Pathie::Path::exe().dirname().parent() / "share" / "tsc-settingseditor" / "mainwindow.xrc";
+  wxXmlResource::Get()->Load(wxString::FromUTF8(xrcfile.str().c_str()));
 
   mp_mainwindow = wxXmlResource::Get()->LoadFrame(NULL, "mainwindow");
   mp_cache_info = new CacheInfo(Pathie::Path::cache_dir() / "tsc-scripteditor" / "data.ini");

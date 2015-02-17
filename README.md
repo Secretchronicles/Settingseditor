@@ -32,6 +32,14 @@ $ make
 # make install
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+If you don’t want to install to `/usr/local`, the default, set the
+`CMAKE_INSTALL_PREFIX` variable accordingly before compilation. For
+example:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+$ cmake -DCMAKE_INSTALL_PREFIX=/opt/tsc-settingseditor ..
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 License
 -------
 
