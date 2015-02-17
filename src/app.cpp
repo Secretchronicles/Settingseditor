@@ -20,6 +20,7 @@
 #include <unistd.h>
 #include <wx/statline.h>
 #include <wx/spinctrl.h>
+#include <wx/notebook.h>
 #include <wx/xrc/xmlres.h>
 #include "utf8.hpp"
 #include "cache.hpp"
@@ -45,6 +46,9 @@ bool SettingseditorApp::OnInit()
 
   setup_graphicseditor();
   setup_event_handlers();
+
+  // Disable the notebook before we have at least one frame
+  XRCCTRL(*mp_mainwindow, "notebook", wxNotebook)->Disable();
 
   mp_mainwindow->Show(true);
   return true;
@@ -167,6 +171,9 @@ void SettingseditorApp::on_frame_list_item_selected(wxCommandEvent& evt)
   p_author_text  ->SetValue(utf8_to_wxstr(p_frame->get_settings().get_author()));
   p_license_text ->SetValue(utf8_to_wxstr(p_frame->get_settings().get_license()));
   p_other_text   ->SetValue(utf8_to_wxstr(p_frame->get_settings().get_other()));
+
+  // Enable the notebook if it wasn't enabled yet (first frame)
+  XRCCTRL(*mp_mainwindow, "notebook", wxNotebook)->Enable();
 
   // Display newly selected image
   mp_graphicseditor->set_frame(p_frame);
