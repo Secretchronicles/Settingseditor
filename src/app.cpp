@@ -50,6 +50,10 @@ bool SettingseditorApp::OnInit()
   // Disable the notebook before we have at least one frame
   XRCCTRL(*mp_mainwindow, "notebook", wxNotebook)->Disable();
 
+  // Set minimum size of the arrow buttons
+  XRCCTRL(*mp_mainwindow, "up_frame_button", wxButton)->SetMinClientSize(wxSize(30, -1));
+  XRCCTRL(*mp_mainwindow, "down_frame_button", wxButton)->SetMinClientSize(wxSize(30, -1));
+
   mp_mainwindow->Show(true);
   return true;
 }
@@ -88,8 +92,11 @@ void SettingseditorApp::setup_event_handlers()
   // Menus
   mp_mainwindow->Bind(wxEVT_COMMAND_MENU_SELECTED, &SettingseditorApp::on_menu_file_quit, this, wxID_EXIT);
 
+  // Frame handling
   XRCCTRL(*mp_mainwindow, "add_frame_button", wxButton)->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &SettingseditorApp::on_add_frame_button_clicked, this, XRCID("add_frame_button"));
   XRCCTRL(*mp_mainwindow, "del_frame_button", wxButton)->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &SettingseditorApp::on_del_frame_button_clicked, this, XRCID("del_frame_button"));
+  XRCCTRL(*mp_mainwindow, "up_frame_button", wxButton)->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &SettingseditorApp::on_up_frame_button_clicked, this, XRCID("up_frame_button"));
+  XRCCTRL(*mp_mainwindow, "down_frame_button", wxButton)->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &SettingseditorApp::on_down_frame_button_clicked, this, XRCID("down_frame_button"));
 
   // List
   XRCCTRL(*mp_mainwindow, "frame_listbox", wxListBox)->Bind(wxEVT_LISTBOX, &SettingseditorApp::on_frame_list_item_selected, this, wxID_ANY);
@@ -147,6 +154,52 @@ void SettingseditorApp::on_del_frame_button_clicked(wxCommandEvent& evt)
 
   p_listbox->Delete(index);
   m_frames.erase(m_frames.begin() + index);
+}
+
+void SettingseditorApp::on_up_frame_button_clicked(wxCommandEvent& evt)
+{
+  wxListBox* p_listbox = XRCCTRL(*mp_mainwindow, "frame_listbox", wxListBox);
+  int index = p_listbox->GetSelection();
+
+  if (index == wxNOT_FOUND) // no selection
+    return;
+  else if (index <= 0) // already at the beginning
+    return;
+
+  wxString itemstr = p_listbox->GetString(index);
+  Frame* p_frame = m_frames[index];
+
+  p_listbox->Delete(index);
+  m_frames.erase(m_frames.begin() + index);
+
+  p_listbox->Insert(itemstr, index - 1);
+  m_frames.insert(m_frames.begin() + (index - 1), p_frame);
+
+  p_listbox->SetSelection(index - 1); // Emits no selection event
+  m_last_selected_frame = index - 1;
+}
+
+void SettingseditorApp::on_down_frame_button_clicked(wxCommandEvent& evt)
+{
+  wxListBox* p_listbox = XRCCTRL(*mp_mainwindow, "frame_listbox", wxListBox);
+  int index = p_listbox->GetSelection();
+
+  if (index == wxNOT_FOUND) // no selection
+    return;
+  else if (static_cast<unsigned int>(index) >= p_listbox->GetCount() - 1) // already at the end; index must be positive at this point
+    return;
+
+  wxString itemstr = p_listbox->GetString(index);
+  Frame* p_frame = m_frames[index];
+
+  p_listbox->Delete(index);
+  m_frames.erase(m_frames.begin() + index);
+
+  p_listbox->Insert(itemstr, index + 1);
+  m_frames.insert(m_frames.begin() + (index + 1), p_frame);
+
+  p_listbox->SetSelection(index + 1); // Emits no selection event
+  m_last_selected_frame = index + 1;
 }
 
 void SettingseditorApp::on_frame_list_item_selected(wxCommandEvent& evt)

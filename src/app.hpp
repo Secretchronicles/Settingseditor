@@ -39,6 +39,8 @@ private:
   void on_menu_file_quit(wxCommandEvent& evt);
   void on_add_frame_button_clicked(wxCommandEvent& evt);
   void on_del_frame_button_clicked(wxCommandEvent& evt);
+  void on_up_frame_button_clicked(wxCommandEvent& evt);
+  void on_down_frame_button_clicked(wxCommandEvent& evt);
   void on_frame_list_item_selected(wxCommandEvent& evt);
   void on_colrect_spin_changed(wxSpinEvent& evt);
   void on_borders_spin_changed(wxSpinEvent& evt);
