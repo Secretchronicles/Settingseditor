@@ -21,6 +21,7 @@
 #include <wx/statline.h>
 #include <wx/spinctrl.h>
 #include <wx/notebook.h>
+#include <wx/aboutdlg.h>
 #include <wx/xrc/xmlres.h>
 #include "utf8.hpp"
 #include "cache.hpp"
@@ -91,6 +92,7 @@ void SettingseditorApp::setup_event_handlers()
 {
   // Menus
   mp_mainwindow->Bind(wxEVT_COMMAND_MENU_SELECTED, &SettingseditorApp::on_menu_file_quit, this, wxID_EXIT);
+  mp_mainwindow->Bind(wxEVT_COMMAND_MENU_SELECTED, &SettingseditorApp::on_menu_help_about, this, wxID_ABOUT);
 
   // Frame handling
   XRCCTRL(*mp_mainwindow, "add_frame_button", wxButton)->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &SettingseditorApp::on_add_frame_button_clicked, this, XRCID("add_frame_button"));
@@ -125,6 +127,86 @@ void SettingseditorApp::add_frame(Pathie::Path path)
 void SettingseditorApp::on_menu_file_quit(wxCommandEvent& evt)
 {
   mp_mainwindow->Close();
+}
+
+void SettingseditorApp::on_menu_help_about(wxCommandEvent& evt)
+{
+  wxAboutDialogInfo info;
+  info.SetName("TSC Settingseditor");
+  //info.setVersion
+  info.SetDescription("A GUI for editing the Secretchronicles settings files.");
+  info.SetCopyright("Copyright © 2015 Marvin Gülker");
+  info.SetWebSite("http://www.secretchronicles.de");
+  info.AddDeveloper("Marvin Gülker (Quintus) <quintus@quintilianus.eu>");
+  info.SetLicense("\
+A specialised TSC settings files editor.\n\
+Copyright © 2015 Marvin Gülker\n\
+\n\
+This program is free software: you can redistribute it and/or modify\n\
+it under the terms of the GNU General Public License as published by\n\
+the Free Software Foundation, either version 3 of the License, or\n\
+(at your option) any later version.\n\
+\n\
+This program is distributed in the hope that it will be useful,\n\
+but WITHOUT ANY WARRANTY; without even the implied warranty of\n\
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n\
+GNU General Public License for more details.\n\
+\n\
+You should have received a copy of the GNU General Public License\n\
+along with this program.  If not, see <http://www.gnu.org/licenses/>.\n\
+\n\
+------------------ Other licenses --------------------\n\
+\n\
+This program includes source code from different authors. The following\n\
+sections list these libraries.\n\
+\n\
+--- inih ---\n\
+\n\
+The \"inih\" library is distributed under the New BSD license:\n\
+Copyright (c) 2009, Brush Technology\n\
+All rights reserved.\n\
+\n\
+Redistribution and use in source and binary forms, with or without\n\
+modification, are permitted provided that the following conditions are met:\n\
+    * Redistributions of source code must retain the above copyright\n\
+      notice, this list of conditions and the following disclaimer.\n\
+    * Redistributions in binary form must reproduce the above copyright\n\
+      notice, this list of conditions and the following disclaimer in the\n\
+      documentation and/or other materials provided with the distribution.\n\
+    * Neither the name of Brush Technology nor the names of its contributors\n\
+      may be used to endorse or promote products derived from this software\n\
+      without specific prior written permission.\n\
+\n\
+THIS SOFTWARE IS PROVIDED BY BRUSH TECHNOLOGY ''AS IS'' AND ANY\n\
+EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\n\
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\n\
+DISCLAIMED. IN NO EVENT SHALL BRUSH TECHNOLOGY BE LIABLE FOR ANY\n\
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES\n\
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n\
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND\n\
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\n\
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\n\
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n\
+\n\
+--- Pathie ---\n\
+Pathie is a path management library.\n\
+\n\
+Copyright © 2015 Marvin Gülker\n\
+\n\
+This program is free software: you can redistribute it and/or modify\n\
+it under the terms of the GNU General Public License as published by\n\
+the Free Software Foundation, either version 3 of the License, or\n\
+(at your option) any later version.\n\
+\n\
+This program is distributed in the hope that it will be useful,\n\
+but WITHOUT ANY WARRANTY; without even the implied warranty of\n\
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n\
+GNU General Public License for more details.\n\
+\n\
+You should have received a copy of the GNU General Public License\n\
+along with this program.  If not, see <http://www.gnu.org/licenses/>.");
+
+  wxAboutBox(info);
 }
 
 void SettingseditorApp::on_add_frame_button_clicked(wxCommandEvent& evt)

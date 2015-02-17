@@ -75,7 +75,7 @@ include_directories(${CMAKE_BINARY_DIR}/pathie/install/include/pathie)
 # Dependencies
 
 #find_package(PkgConfig REQUIRED)
-find_package(wxWidgets 3.0.0 REQUIRED xrc core base)
+find_package(wxWidgets 3.0.0 REQUIRED xrc adv core base)
 
 include(${wxWidgets_USE_FILE})
 include_directories(${wxWidgets_INCLUDE_DIRS})
